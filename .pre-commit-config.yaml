@@ -1,21 +1,70 @@
+default_language_version:
+  python: python3
+
+ci:
+  autofix_prs: true
+  autoupdate_commit_msg: "[pre-commit.ci] pre-commit suggestions"
+  autoupdate_schedule: "quarterly"
+
 repos:
-  - repo: local
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
     hooks:
-      - id: pylint
-        name: pylint
-        entry: pylint tinygrad/
-        language: system
-        always_run: true
-        pass_filenames: false
-      - id: flake8
-        name: flake8
-        entry: flake8 tinygrad/ --indent-size=2 --select=F,E112,E113,E304,E502,E702,E703,E71,E72,E731,W191,W6 --statistics -j4
-        language: system
-        always_run: true
-        pass_filenames: false
-      - id: mypy
-        name: mypy
-        entry: mypy tinygrad/ --check-untyped-defs --explicit-package-bases --warn-unreachable # --warn-return-any
-        language: system
-        always_run: true
-        pass_filenames: false
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: check-case-conflict
+      - id: check-yaml
+      - id: check-toml
+      - id: check-json
+      - id: check-added-large-files
+      - id: check-docstring-first
+      - id: detect-private-key
+
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v3.3.1
+    hooks:
+      - id: pyupgrade
+        args: [--py38-plus]
+        name: Upgrade code
+
+  - repo: https://github.com/myint/docformatter
+    rev: v1.5.1
+    hooks:
+      - id: docformatter
+        args: [--in-place, --wrap-summaries=120, --wrap-descriptions=120]
+
+  - repo: https://github.com/psf/black
+    rev: 22.12.0
+    hooks:
+      - id: black
+        name: Black code
+        args: ["--line-length=120"]
+
+  - repo: https://github.com/executablebooks/mdformat
+    rev: 0.7.16
+    hooks:
+      - id: mdformat
+        additional_dependencies:
+          - mdformat-gfm
+          - mdformat-black
+          - mdformat_frontmatter
+
+  - repo: https://github.com/charliermarsh/ruff-pre-commit
+    rev: v0.0.240
+    hooks:
+      - id: ruff
+        args: ["--fix", "--line-length=120", "--ignore=E402"]
+
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v2.7.1
+    hooks:
+      - id: prettier
+        exclude: |
+          (?x)(
+              ^echo/ui/build|
+              ^README.md
+          )
+        additional_dependencies:
+          - prettier@2.7.1
+          - typescript@4.4.2
+          - "@trivago/prettier-plugin-sort-imports@3.1.0"

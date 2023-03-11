@@ -17,3 +17,5 @@ recognize*
 .idea
 disassemblers/applegpu
 *.prof
+venv
+.env.local
